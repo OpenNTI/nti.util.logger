@@ -1,0 +1,55 @@
+{
+  "name": "nti-util-logger",
+  "version": "1.0.0",
+  "description": "Logger wrapper utility that will provide the .log .error .warn .info .debug methods",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "engines": {
+    "node": ">=5.0.0",
+    "npm": ">=3.3.0"
+  },
+  "scripts": {
+      "test": "karma start --single-run --reporters dots,html,junit,coverage",
+      "start": "make check",
+      "prepublish": "make test && make"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://repos.nextthought.com/nti.util.logger"
+  },
+  "keywords": [
+    "logger"
+  ],
+  "author": "nextthought",
+  "license": "UNLICENCED",
+  "dependencies": {
+    "debug": "^2.2.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.1.0",
+    "babel-eslint": "^4.1.0",
+    "babel-loader": "^6.2.0",
+    "babel-plugin-transform-runtime": "^6.1.0",
+    "babel-polyfill": "^6.1.0",
+    "babel-preset-es2015": "^6.1.0",
+    "babel-preset-stage-2": "^6.1.0",
+    "eslint": "^1.0.0",
+    "isparta-instrumenter-loader": "^1.0.0",
+    "jasmine-core": "^2.1.2",
+    "karma": "^0.13.0",
+    "karma-coverage": "^0.5.3",
+    "karma-html-reporter": "^0.2.7",
+    "karma-jasmine": "^0.3.1",
+    "karma-junit-reporter": "^0.3.8",
+    "karma-mocha-reporter": "^1.0.2",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "karma-script-launcher": "^0.1.0",
+    "karma-sourcemap-loader": "^0.3.0",
+    "karma-webpack": "^1.3.1",
+    "phantomjs": "^1.9.18",
+    "webpack": "^1.8.4",
+    "webpack-dev-server": "^1.8.0"
+  }
+}
