@@ -1,6 +1,6 @@
 {
   "name": "nti-util-logger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Logger wrapper utility that will provide the .log .error .warn .info .debug methods",
   "main": "lib/index.js",
   "files": [
@@ -11,9 +11,9 @@
     "npm": ">=3.3.0"
   },
   "scripts": {
-      "test": "karma start --single-run --reporters dots,html,junit,coverage",
-      "start": "make check",
-      "prepublish": "make test && make"
+    "test": "karma start --single-run --reporters dots,html,junit,coverage",
+    "start": "make check",
+    "prepublish": "make test && make"
   },
   "repository": {
     "type": "git",
