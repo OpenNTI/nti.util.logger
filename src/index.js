@@ -39,7 +39,10 @@ export default class Logger {
 
 
 		if (process.browser) {
-			const getLog = lvl => console[console.trace && /Chrome\//.test(navigator.userAgent) ? 'trace' : lvl].bind(console);
+			const getLog = lvl => {
+				const f =  console[console.trace && /Chrome\//.test(navigator.userAgent) ? 'trace' : lvl];
+				return f ? f.bind(console) : console.log.bind(console);
+			};
 			this.error.log = getLog('error');
 			this.warn.log = getLog('warn');
 			this.debug.log = getLog('debug');
