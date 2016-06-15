@@ -31,6 +31,19 @@ export default class Logger {
 	}
 
 
+	static enable (it) {
+		const find = (o, map) => Object.keys(map).reduce((found, i) => found || (map[i] === o && i), null);
+
+		const pattern = it == null ? '*'
+						: typeof it === 'string' ? it
+						: find(it, this.loggers);
+
+		if (pattern) {
+			logger.enable(pattern);
+		}
+	}
+
+
 	constructor (name) {
 		for (let key of ['info', 'error', 'warn', 'debug']) {
 			this[key] = logger(`${name}:${key}`);
