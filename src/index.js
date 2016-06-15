@@ -1,8 +1,9 @@
 import logger from 'debug';
 
-const pattern = logger.load() || ['info', 'error', 'warn'].map(x => `*:${x}`).join(',');
-if (!process.browser) {
-	logger.enable(pattern);
+const defaultPattern = ['info', 'error', 'warn'].map(x => `*:${x}`).join(',');
+const pattern = logger.load();
+if (!pattern || !process.browser) {
+	logger.enable(pattern || defaultPattern);
 }
 
 const COLORS = {
@@ -28,19 +29,6 @@ export default class Logger {
 
 	static quiet () {
 		logger.disable();
-	}
-
-
-	static enable (it) {
-		const find = (o, map) => Object.keys(map).reduce((found, i) => found || (map[i] === o && i), null);
-
-		const pattern = it == null ? '*'
-						: typeof it === 'string' ? it
-						: find(it, this.loggers);
-
-		if (pattern) {
-			logger.enable(pattern);
-		}
 	}
 
 
