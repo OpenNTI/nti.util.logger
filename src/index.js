@@ -15,6 +15,16 @@ const COLORS = {
 	//'': browser ? 'lightseagreen' : 6, //lightblue
 };
 
+const getLogMethod = x => getLocalValue(x) || x;
+
+function getLocalValue (key) {
+	try {
+		return localStorage.getItem(`nti-logger.${key}`);
+	} catch (e) {
+		return null;
+	}
+}
+
 export default class Logger {
 
 	static get (name) {
@@ -40,10 +50,12 @@ export default class Logger {
 
 
 		if (process.browser) {
+
 			const getLog = lvl => {
-				const f =  console[console.trace && /Chrome\//.test(navigator.userAgent) ? 'trace' : lvl];
+				const f =  console[getLogMethod(lvl)] || console[lvl];
 				return f ? f.bind(console) : console.log.bind(console);
 			};
+
 			this.error.log = getLog('error');
 			this.warn.log = getLog('warn');
 			this.debug.log = getLog('debug');
