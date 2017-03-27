@@ -11,7 +11,7 @@
     "npm": ">=3.3.0"
   },
   "scripts": {
-    "test": "karma start --single-run --reporters dots,html,junit,coverage",
+    "test": "make test",
     "start": "make check",
     "prepublish": "not-in-install && make || in-install",
     "preversion": "make test",
