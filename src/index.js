@@ -19,7 +19,7 @@ const getLogMethod = x => getLocalValue(x) || x;
 
 function getLocalValue (key) {
 	try {
-		return localStorage.getItem(`nti-logger.${key}`);
+		return global.localStorage.getItem(`nti-logger.${key}`);
 	} catch (e) {
 		return null;
 	}

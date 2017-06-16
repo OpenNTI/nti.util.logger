@@ -1,10 +1,6 @@
 {
-	"extends": [
-		"nti-codestyle-js"
-	],
-	"parser": "babel-eslint",
-
+	"extends": "./node_modules/nti-lib-scripts/config/eslintrc.js",
 	"rules": {
-		"no-console": 0
+		"no-console": "off"
 	}
 }
