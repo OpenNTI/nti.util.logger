@@ -27,7 +27,7 @@
   "author": "nextthought",
   "license": "UNLICENCED",
   "dependencies": {
-    "debug": "^2.2.0"
+    "debug": "^3.1.0"
   },
   "devDependencies": {
     "nti-lib-scripts": "^1.0.36"
