@@ -1,10 +1,6 @@
 import logger from 'debug';
 
 const defaultPattern = ['info', 'error', 'warn'].map(x => `*:${x}`).join(',');
-const pattern = logger.load();
-if (!pattern || !process.browser) {
-	logger.enable(pattern || defaultPattern);
-}
 
 const COLORS = {
 	'error': process.browser ? 'crimson' : 1, //red
@@ -41,6 +37,22 @@ export default class Logger {
 		logger.disable();
 	}
 
+	onFirstCall (f) {
+
+		return (...args) => {
+
+			if (!Logger.called) {
+				Logger.called = true;
+
+				const pattern = logger.load();
+				if (!pattern || !process.browser) {
+					logger.enable(pattern || defaultPattern);
+				}
+			}
+
+			return f.apply(this, args);
+		};
+	}
 
 	constructor (name) {
 		for (let key of ['info', 'error', 'warn', 'debug']) {
@@ -64,5 +76,11 @@ export default class Logger {
 
 		this.name = name;
 		this.log = this.info;
+
+		for (let f of Object.keys(this)) {
+			if (this[f] && typeof this[f] === 'function') {
+				this[f] = this.onFirstCall(this[f]);
+			}
+		}
 	}
 }
