@@ -54,6 +54,18 @@ export default class Logger {
 		};
 	}
 
+	getConsoleWriter (lvl) {
+		// Internet Explorer 6-11 (testing conditional execution of comment)
+		const isIE = /*@cc_on!@*/false || !!global.document.documentMode;
+		const method =  console[getLogMethod(lvl)] || console[lvl];
+		const writer = method ? method.bind(console) : console.log.bind(console);
+
+		const filter = (o) => o && o.toJSON ? o.toJSON() : o;
+
+		return !isIE ? writer : (...args) =>
+			writer.apply(console, args.map(o => typeof o !== 'object' ? o : filter(o)));
+	}
+
 	constructor (name) {
 		for (let key of ['info', 'error', 'warn', 'debug']) {
 			this[key] = logger(`${name}:${key}`);
@@ -62,16 +74,10 @@ export default class Logger {
 
 
 		if (process.browser) {
-
-			const getLog = lvl => {
-				const f =  console[getLogMethod(lvl)] || console[lvl];
-				return f ? f.bind(console) : console.log.bind(console);
-			};
-
-			this.error.log = getLog('error');
-			this.warn.log = getLog('warn');
-			this.debug.log = getLog('debug');
-			this.info.log = getLog('log');
+			this.error.log = this.getConsoleWriter('error');
+			this.warn.log = this.getConsoleWriter('warn');
+			this.debug.log = this.getConsoleWriter('debug');
+			this.info.log = this.getConsoleWriter('log');
 		}
 
 		this.name = name;
