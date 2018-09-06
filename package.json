@@ -2,10 +2,11 @@
   "name": "@nti/util-logger",
   "version": "1.6.0-alpha",
   "description": "Logger wrapper utility that will provide the .log .error .warn .info .debug methods",
-  "main": "lib/cjs-index.js",
-  "module": "lib/index.js",
+  "main": "lib/index.js",
+  "module": "src/index.js",
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "scripts": {
     "test": "lib-scripts test",
@@ -33,6 +34,6 @@
     "debug": "^3.1.0"
   },
   "devDependencies": {
-    "@nti/lib-scripts": "^1.16.0"
+    "@nti/lib-scripts": "^2.0.0"
   }
 }
