@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import logger from 'debug';
 
 const defaultPattern = ['info', 'error', 'warn'].map(x => `*:${x}`).join(',');
