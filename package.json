@@ -11,12 +11,9 @@
   "scripts": {
     "test": "lib-scripts test",
     "start": "lib-scripts test --watch",
-    "prepack": "lib-scripts build",
-    "build": "lib-scripts build",
     "clean": "lib-scripts clean",
     "check": "lib-scripts check",
-    "release": "lib-scripts release",
-    "install-snapshots": "lib-scripts install-snapshots"
+    "release": "lib-scripts release"
   },
   "repository": {
     "type": "git",
