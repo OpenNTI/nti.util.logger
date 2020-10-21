@@ -46,7 +46,7 @@ export default class Logger {
 				Logger.called = true;
 
 				const pattern = logger.load();
-				if (!pattern || !process.browser) {
+				if ((!pattern && process.env.NODE_ENV === 'development') || !process.browser) {
 					logger.enable(pattern || defaultPattern);
 				}
 			}
