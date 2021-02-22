@@ -4,17 +4,17 @@ import logger from 'debug';
 const defaultPattern = ['info', 'error', 'warn'].map(x => `*:${x}`).join(',');
 
 const COLORS = {
-	'error': process.browser ? 'crimson' : 1, //red
-	'info': process.browser ? 'forestgreen' : 2, //green
-	'warn': process.browser ? 'goldenrod' : 3, //yellow/orange
-	'debug': process.browser ? 'dodgerblue' : 4 //blue
+	error: process.browser ? 'crimson' : 1, //red
+	info: process.browser ? 'forestgreen' : 2, //green
+	warn: process.browser ? 'goldenrod' : 3, //yellow/orange
+	debug: process.browser ? 'dodgerblue' : 4, //blue
 	//'': browser ? 'darkorchid' : 5, //magenta
 	//'': browser ? 'lightseagreen' : 6, //lightblue
 };
 
 const getLogMethod = x => getLocalValue(x) || x;
 
-function getLocalValue (key) {
+function getLocalValue(key) {
 	try {
 		return global.localStorage.getItem(`nti-logger.${key}`);
 	} catch (e) {
@@ -23,9 +23,8 @@ function getLocalValue (key) {
 }
 
 export default class Logger {
-
-	static get (name) {
-		const cache = this.loggers = this.loggers || {};
+	static get(name) {
+		const cache = (this.loggers = this.loggers || {});
 
 		if (!cache[name]) {
 			cache[name] = new Logger(name);
@@ -34,19 +33,20 @@ export default class Logger {
 		return cache[name];
 	}
 
-	static quiet () {
+	static quiet() {
 		logger.disable();
 	}
 
-	onFirstCall (f) {
-
+	onFirstCall(f) {
 		return (...args) => {
-
 			if (!Logger.called) {
 				Logger.called = true;
 
 				const pattern = logger.load();
-				if ((!pattern && process.env.NODE_ENV !== 'production') || !process.browser) {
+				if (
+					(!pattern && process.env.NODE_ENV !== 'production') ||
+					!process.browser
+				) {
 					logger.enable(pattern || defaultPattern);
 				}
 			}
@@ -55,24 +55,30 @@ export default class Logger {
 		};
 	}
 
-	getConsoleWriter (lvl) {
+	getConsoleWriter(lvl) {
 		// Internet Explorer 6-11 (testing conditional execution of comment)
-		const isIE = /*@cc_on!@*/false || !!global.document.documentMode;
-		const method =  console[getLogMethod(lvl)] || console[lvl];
-		const writer = method ? method.bind(console) : console.log.bind(console);
+		const isIE = /*@cc_on!@*/ false || !!global.document.documentMode;
+		const method = console[getLogMethod(lvl)] || console[lvl];
+		const writer = method
+			? method.bind(console)
+			: console.log.bind(console);
 
-		const filter = (o) => o && o.toJSON ? o.toJSON() : o;
+		const filter = o => (o && o.toJSON ? o.toJSON() : o);
 
-		return !isIE ? writer : (...args) =>
-			writer.apply(console, args.map(o => typeof o !== 'object' ? o : filter(o)));
+		return !isIE
+			? writer
+			: (...args) =>
+					writer.apply(
+						console,
+						args.map(o => (typeof o !== 'object' ? o : filter(o)))
+					);
 	}
 
-	constructor (name) {
+	constructor(name) {
 		for (let key of ['info', 'error', 'warn', 'debug']) {
 			this[key] = logger(`${name}:${key}`);
 			this[key].color = COLORS[key];
 		}
-
 
 		if (process.browser) {
 			this.error.log = this.getConsoleWriter('error');
