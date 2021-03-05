@@ -57,7 +57,7 @@ export default class Logger {
 
 	getConsoleWriter(lvl) {
 		// Internet Explorer 6-11 (testing conditional execution of comment)
-		const isIE = /*@cc_on!@*/ false || !!global.document.documentMode;
+		const isIE = /*@cc_on!@*/ false || !!global.document?.documentMode;
 		const method = console[getLogMethod(lvl)] || console[lvl];
 		const writer = method
 			? method.bind(console)
