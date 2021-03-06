@@ -56,22 +56,12 @@ export default class Logger {
 	}
 
 	getConsoleWriter(lvl) {
-		// Internet Explorer 6-11 (testing conditional execution of comment)
-		const isIE = /*@cc_on!@*/ false || !!global.document?.documentMode;
 		const method = console[getLogMethod(lvl)] || console[lvl];
 		const writer = method
 			? method.bind(console)
 			: console.log.bind(console);
 
-		const filter = o => (o && o.toJSON ? o.toJSON() : o);
-
-		return !isIE
-			? writer
-			: (...args) =>
-					writer.apply(
-						console,
-						args.map(o => (typeof o !== 'object' ? o : filter(o)))
-					);
+		return writer;
 	}
 
 	constructor(name) {
