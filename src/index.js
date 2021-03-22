@@ -54,6 +54,11 @@ export default class Logger {
 
 		this.name = name;
 		this.log = this.info;
+
+		this.stack = error => {
+			this.error(error?.stack || error?.message || error);
+			Sentry?.captureException(error);
+		};
 	}
 }
 
