@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
-import logger from 'debug';
+import util from 'util';
+
+import debug from 'debug';
 
 const defaultPattern = ['info', 'error', 'warn'].map(x => `*:${x}`).join(',');
 
@@ -12,17 +14,13 @@ const COLORS = {
 	//'': browser ? 'lightseagreen' : 6, //lightblue
 };
 
-const getLogMethod = x => getLocalValue(x) || x;
-
-function getLocalValue(key) {
-	try {
-		return global.localStorage.getItem(`nti-logger.${key}`);
-	} catch (e) {
-		return null;
-	}
-}
+let Sentry = null;
 
 export default class Logger {
+	static injectSentry(sentry) {
+		Sentry = sentry;
+	}
+
 	static get(name) {
 		const cache = (this.loggers = this.loggers || {});
 
@@ -34,56 +32,63 @@ export default class Logger {
 	}
 
 	static quiet() {
-		logger.disable();
-	}
-
-	onFirstCall(f) {
-		return (...args) => {
-			if (!Logger.called) {
-				Logger.called = true;
-
-				const pattern = logger.load();
-				if (
-					(!pattern && process.env.NODE_ENV !== 'production') ||
-					!process.browser
-				) {
-					logger.enable(pattern || defaultPattern);
-				}
-			}
-
-			return f.apply(this, args);
-		};
-	}
-
-	getConsoleWriter(lvl) {
-		const method = console[getLogMethod(lvl)] || console[lvl];
-		const writer = method
-			? method.bind(console)
-			: console.log.bind(console);
-
-		return writer;
+		debug.disable();
 	}
 
 	constructor(name) {
-		for (let key of ['info', 'error', 'warn', 'debug']) {
-			this[key] = logger(`${name}:${key}`);
-			this[key].color = COLORS[key];
+		if (!Logger.init) {
+			Logger.init = true;
+
+			const pattern = debug.load();
+			if (
+				(!pattern && process.env.NODE_ENV !== 'production') ||
+				!process.browser
+			) {
+				debug.enable(pattern || defaultPattern);
+			}
 		}
 
-		if (process.browser) {
-			this.error.log = this.getConsoleWriter('error');
-			this.warn.log = this.getConsoleWriter('warn');
-			this.debug.log = this.getConsoleWriter('debug');
-			this.info.log = this.getConsoleWriter('log');
+		for (let key of ['info', 'error', 'warn', 'debug']) {
+			this[key] = logger(`${name}:${key}`);
 		}
 
 		this.name = name;
 		this.log = this.info;
+	}
+}
 
-		for (let f of Object.keys(this)) {
-			if (this[f] && typeof this[f] === 'function') {
-				this[f] = this.onFirstCall(this[f]);
-			}
+function getConsoleWriter(lvl) {
+	function getLocalValue(key) {
+		try {
+			return global.localStorage.getItem(`nti-logger.${key}`);
+		} catch (e) {
+			return null;
 		}
 	}
+	const getLogMethod = x => getLocalValue(x) || x;
+	const method = console[getLogMethod(lvl)] || console[lvl];
+	const writer = method ? method.bind(console) : console.log.bind(console);
+
+	return writer;
+}
+
+function logger(namespace, level) {
+	const category = debug(namespace);
+	category.color = COLORS[level];
+
+	if (process.browser) {
+		category.log = getConsoleWriter('error');
+	}
+
+	return (...args) => {
+		if (!category.enabled) {
+			Sentry?.addBreadcrumb({
+				category: 'debug',
+				timestamp: new Date(),
+				message: util.format(...args),
+				level: level || 'info',
+			});
+		}
+		category(...args);
+	};
 }
