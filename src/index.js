@@ -81,8 +81,8 @@ function logger(namespace, level) {
 	}
 
 	return (...args) => {
-		if (!category.enabled) {
-			Sentry?.addBreadcrumb({
+		if (!category.enabled && Sentry) {
+			Sentry.addBreadcrumb({
 				category: 'debug',
 				timestamp: new Date(),
 				message: util.format(...args),
