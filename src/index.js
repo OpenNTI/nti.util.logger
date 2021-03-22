@@ -10,8 +10,8 @@ const COLORS = {
 	info: process.browser ? 'forestgreen' : 2, //green
 	warn: process.browser ? 'goldenrod' : 3, //yellow/orange
 	debug: process.browser ? 'dodgerblue' : 4, //blue
-	//'': browser ? 'darkorchid' : 5, //magenta
-	//'': browser ? 'lightseagreen' : 6, //lightblue
+	trace: process.browser ? 'darkorchid' : 5, //magenta
+	//'': process.browser ? 'lightseagreen' : 6, //lightblue
 };
 
 let Sentry = null;
@@ -48,7 +48,7 @@ export default class Logger {
 			}
 		}
 
-		for (let key of ['info', 'error', 'warn', 'debug']) {
+		for (let key of ['info', 'error', 'warn', 'debug', 'trace']) {
 			this[key] = logger(`${name}:${key}`);
 		}
 
@@ -81,7 +81,7 @@ function logger(namespace, level) {
 	}
 
 	return (...args) => {
-		if (!category.enabled && Sentry) {
+		if (level !== 'trace' && !category.enabled && Sentry) {
 			Sentry.addBreadcrumb({
 				category: 'debug',
 				timestamp: new Date(),
