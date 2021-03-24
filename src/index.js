@@ -49,7 +49,7 @@ export default class Logger {
 		}
 
 		for (let key of ['info', 'error', 'warn', 'debug', 'trace']) {
-			this[key] = logger(`${name}:${key}`);
+			this[key] = logger(`${name}:${key}`, key);
 		}
 
 		this.name = name;
