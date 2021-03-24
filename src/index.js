@@ -66,17 +66,11 @@ export default class Logger {
 }
 
 function getConsoleWriter(lvl) {
-	function getLocalValue(key) {
-		try {
-			return global.localStorage.getItem(`nti-logger.${key}`);
-		} catch (e) {
-			return null;
-		}
+	if (lvl === 'trace') {
+		lvl = 'error';
 	}
-	const getLogMethod = x => getLocalValue(x) || x;
-	const method = console[getLogMethod(lvl)] || console[lvl];
-	const writer = method ? method.bind(console) : console.log.bind(console);
-
+	const method = console[lvl] || console.debug;
+	const writer = method.bind(console);
 	return writer;
 }
 
@@ -85,7 +79,7 @@ function logger(namespace, level) {
 	category.color = COLORS[level];
 
 	if (process.browser) {
-		category.log = getConsoleWriter('error');
+		category.log = getConsoleWriter(level);
 	}
 
 	return (...args) => {
