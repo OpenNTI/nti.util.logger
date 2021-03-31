@@ -2,12 +2,8 @@
   "name": "@nti/util-logger",
   "version": "1.13.0-alpha",
   "description": "Logger wrapper utility that will provide the .log .error .warn .info .debug methods",
-  "main": ".index.js",
-  "module": "src/index.js",
-  "files": [
-    ".index.js",
-    "src"
-  ],
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "test": "lib-scripts test",
     "start": "lib-scripts test --watch",
@@ -28,8 +24,7 @@
   "author": "nextthought",
   "license": "UNLICENSED",
   "dependencies": {
-    "debug": "^4.1.1",
-    "esm": "^3.2.25"
+    "debug": "^4.1.1"
   },
   "devDependencies": {
     "@nti/lib-scripts": "^2.0.0"

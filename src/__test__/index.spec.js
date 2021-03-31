@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import Logger from '../index';
+import Logger from '../index.js';
 
 describe('Logger', () => {
 	test('should be defined and expose a getter method', () => {

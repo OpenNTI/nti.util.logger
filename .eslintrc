@@ -1,3 +1,4 @@
 {
-	"extends": "@nti/eslint-config-lib-scripts"
+	"extends": "@nti/eslint-config-lib-scripts",
+	"parser": "espree"
 }
