@@ -88,7 +88,7 @@ function logger(namespace, level) {
 				category: 'debug',
 				timestamp: new Date(),
 				message: util.format(...args),
-				level: level || 'info',
+				level: level === 'warn' ? 'warning' : level || 'info',
 			});
 		}
 		category(...args);
