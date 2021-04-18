@@ -17,10 +17,20 @@ const COLORS = {
 let Sentry = null;
 
 export default class Logger {
+	/**
+	 * Enable reporting errors to sentry through the logger.
+	 * This should be called once at application initialization.
+	 *
+	 * @param {Sentry} sentry Sentry instance.
+	 */
 	static injectSentry(sentry) {
 		Sentry = sentry;
 	}
 
+	/**
+	 * @param {string} name
+	 * @returns {Logger}
+	 */
 	static get(name) {
 		const cache = (this.loggers = this.loggers || {});
 
@@ -31,6 +41,9 @@ export default class Logger {
 		return cache[name];
 	}
 
+	/**
+	 * Disable all logging.
+	 */
 	static quiet() {
 		debug.disable();
 	}
@@ -52,9 +65,21 @@ export default class Logger {
 			this[key] = logger(`${name}:${key}`, key);
 		}
 
+		/**
+		 * @property {string} name Logger key
+		 */
 		this.name = name;
+
+		/**
+		 * @alias {this.info}
+		 */
 		this.log = this.info;
 
+		/**
+		 * Log a stack trace at error level, while also reporting the error to Sentry
+		 *
+		 * @param {Error} error
+		 */
 		this.stack = error => {
 			error = error || 'Not Given';
 			this.error(error.stack || error.message || error);
@@ -62,6 +87,66 @@ export default class Logger {
 				Sentry.captureException(error);
 			}
 		};
+	}
+
+	/**
+	 * Log a message at debug level.
+	 *
+	 * Level: trace => debug => info => warn => error
+	 *
+	 * @param {string|any} message
+	 * @param  {...any} args
+	 */
+	debug(message, ...args) {
+		/* implemented in constructor, this exists only for type-def documentation */
+	}
+
+	/**
+	 * Log a message at info.
+	 *
+	 * Level: trace => debug => info => warn => error
+	 *
+	 * @param {string|any} message
+	 * @param  {...any} args
+	 */
+	info(message, ...args) {
+		/* implemented in constructor, this exists only for type-def documentation */
+	}
+
+	/**
+	 * Log a message at error level.
+	 *
+	 * Level: trace => debug => info => warn => error
+	 *
+	 * @param {string|any} message
+	 * @param  {...any} args
+	 */
+	error(message, ...args) {
+		/* implemented in constructor, this exists only for type-def documentation */
+	}
+
+	/**
+	 * Log a message at warning level.
+	 *
+	 * Level: trace => debug => info => warn => error
+	 *
+	 * @param {string|any} message
+	 * @param  {...any} args
+	 */
+	warn(message, ...args) {
+		/* implemented in constructor, this exists only for type-def documentation */
+	}
+
+	/**
+	 * Log a message at trace level.
+	 *
+	 * Level: trace => debug => info => warn => error
+	 *
+	 * @param {string|any} message
+	 * @param  {...any} args
+	 */
+	trace(message, ...args) {
+		/* implemented in constructor, this exists only for type-def documentation */
 	}
 }
 
