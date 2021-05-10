@@ -169,6 +169,9 @@ function logger(namespace, level) {
 
 	return (...args) => {
 		if (level !== 'trace' && !category.enabled && Sentry) {
+			if (typeof args[0] === 'string') {
+				args[0] = args[0].replace(/%o/gi, '%j');
+			}
 			Sentry.addBreadcrumb({
 				category: 'debug',
 				timestamp: new Date(),
