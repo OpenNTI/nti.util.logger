@@ -175,10 +175,33 @@ function logger(namespace, level) {
 			Sentry.addBreadcrumb({
 				category: 'debug',
 				timestamp: new Date(),
-				message: util.format(...args),
+				message: quietFormat(...args),
 				level: level === 'warn' ? 'warning' : level || 'info',
 			});
 		}
 		category(...args);
 	};
+}
+
+// exported for testing
+export function quietFormat(...args) {
+	const noop = () => {};
+	const c = global.console;
+	let message;
+	try {
+		global.console = new Proxy(
+			{},
+			{
+				get: () => noop,
+			}
+		);
+
+		message = util.format(...args);
+	} catch (e) {
+		message = e.message ?? e;
+	} finally {
+		global.console = c;
+	}
+
+	return message;
 }
