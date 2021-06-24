@@ -1,6 +1,6 @@
 {
   "name": "@nti/util-logger",
-  "version": "1.14.0-alpha",
+  "version": "1.14.0",
   "description": "Logger wrapper utility that will provide the .log .error .warn .info .debug methods",
   "main": "src/index.js",
   "type": "module",
